@@ -1,10 +1,6 @@
 const assert = require('assert');
 
-/**
- * (if <condition>
- *     <consequent>
- *     <alternate>)
- */
+// if <condition> <consequent> <alternate>
 module.exports = (eva) => {
     assert.strictEqual(
         eva.eval([

@@ -83,6 +83,18 @@ class Eva {
         }
 
         //-----------------------------------------------
+        // while-expression:
+
+        if (exp[0] === 'while') {
+            const [_tag, condition, body] = exp;
+            let result;
+            while (this.eval(condition, env)) {
+                result = this.eval(body, env);
+            }
+            return result;
+        }
+
+        //-----------------------------------------------
         // Variable access: foo
 
         if (this.isVariableName(exp)) {
