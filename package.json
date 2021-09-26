@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node __tests__/index.js"
+    "test": "node --trace-uncaught __tests__/index.js"
   },
   "keywords": [],
   "author": "",
