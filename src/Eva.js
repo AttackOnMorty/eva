@@ -112,7 +112,6 @@ class Eva {
     }
 
     _isVariableName(exp) {
-        //
         return (
             typeof exp === 'string' &&
             (/^[a-zA-Z_$][0-9a-zA-Z_$]+/.test(exp) ||
