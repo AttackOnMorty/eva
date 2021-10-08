@@ -1,5 +1,4 @@
 const Eva = require('../src/Eva');
-const Environment = require('../src/Environment');
 
 const tests = [
     require('./self-eval-test'),

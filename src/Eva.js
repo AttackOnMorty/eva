@@ -75,9 +75,14 @@ class Eva {
             const fn = this.eval(exp[0]);
             const args = exp.slice(1).map((arg) => this.eval(arg, env));
 
+            // 1. Native function:
+
             if (typeof fn === 'function') {
                 return fn(...args);
             }
+
+            // 2. User-defined function:
+            // TODO:
         }
 
         //-----------------------------------------------
