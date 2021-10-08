@@ -65,6 +65,20 @@ class Eva {
         }
 
         //-----------------------------------------------
+        // Function declaration: (def square (x) (* x x))
+        if (exp[0] === 'def') {
+            const [_tag, name, params, body] = exp;
+
+            const fn = {
+                params,
+                body,
+                env,
+            };
+
+            return env.define(name, fn);
+        }
+
+        //-----------------------------------------------
         // Function calls:
         //
         // (print "Hello World")
@@ -72,7 +86,7 @@ class Eva {
         // (> foo bar)
 
         if (Array.isArray(exp)) {
-            const fn = this.eval(exp[0]);
+            const fn = this.eval(exp[0], env);
             const args = exp.slice(1).map((arg) => this.eval(arg, env));
 
             // 1. Native function:
@@ -82,7 +96,15 @@ class Eva {
             }
 
             // 2. User-defined function:
-            // TODO:
+            const activationRecord = {};
+
+            fn.params.forEach((param, index) => {
+                activationRecord[param] = args[index];
+            });
+
+            const activationEnv = new Environment(activationRecord, fn.env);
+
+            return this._evalBody(fn.body, activationEnv);
         }
 
         //-----------------------------------------------
@@ -93,6 +115,13 @@ class Eva {
         }
 
         throw `Unimplemented: ${exp}`;
+    }
+
+    _evalBody(body, env) {
+        if (body[0] === 'begin') {
+            return this._evalBlock(body, env);
+        }
+        return this.eval(body, env);
     }
 
     _evalBlock(block, blockEnv) {

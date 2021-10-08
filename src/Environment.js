@@ -27,7 +27,7 @@ class Environment {
             throw ReferenceError(`${name} is not defined.`);
         }
 
-        return this.parent;
+        return this.parent._resolve(name);
     }
 }
 
