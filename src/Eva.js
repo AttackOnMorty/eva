@@ -76,7 +76,7 @@ class Eva {
 
             const varExp = ['var', name, ['lambda', params, body]];
 
-            return env.define(varExp, fn);
+            return this.eval(varExp, env);
         }
 
         //-----------------------------------------------
@@ -182,7 +182,7 @@ const GlobalEnvironment = new Environment({
 
     '-': (op1, op2) => {
         if (op2 === null) return -op1;
-        return op1 + op2;
+        return op1 - op2;
     },
 
     '*': (op1, op2) => op1 * op2,

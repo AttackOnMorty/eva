@@ -66,22 +66,21 @@ module.exports = (eva) => {
     );
 
     // Recursive function:
-    // TODO:
 
-    // test(
-    //     eva,
-    //     `
-    //         (begin
+    test(
+        eva,
+        `
+            (begin
 
-    //         (def factorial (x)
-    //             (if (=== x 1)
-    //             1
-    //             (* x (factorial (- x 1)))))
+            (def factorial (x)
+                (if (=== x 1)
+                1
+                (* x (factorial (- x 1)))))
 
-    //         (factorial 5)
+            (factorial 5)
 
-    //         )
-    //     `,
-    //     120
-    // );
+            )
+        `,
+        120
+    );
 };
