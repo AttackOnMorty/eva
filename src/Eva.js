@@ -4,11 +4,11 @@ const Transformer = require('./Transformer');
 class Eva {
     constructor(global = GlobalEnvironment) {
         this.global = global;
-        this.transformer = new Transformer();
+        this._transformer = new Transformer();
     }
 
     eval(exp, env = this.global) {
-        //-----------------------------------------------
+        // --------------------------------------------
         // Self-evaluating expressions:
 
         if (this._isNumber(exp)) {
@@ -19,7 +19,47 @@ class Eva {
             return exp.slice(1, -1);
         }
 
-        //-----------------------------------------------
+        // --------------------------------------------
+        // Increment: (++ foo)
+        //
+        // Syntactic sugar for: (set foo (+ foo 1))
+
+        if (exp[0] === '++') {
+            const setExp = this._transformer.transformIncToSet(exp);
+            return this.eval(setExp, env);
+        }
+
+        // --------------------------------------------
+        // Decrement: (-- foo)
+        //
+        // Syntactic sugar for: (set foo (- foo 1))
+
+        if (exp[0] === '--') {
+            const setExp = this._transformer.transformDecToSet(exp);
+            return this.eval(setExp, env);
+        }
+
+        // --------------------------------------------
+        // Increment: (+= foo inc)
+        //
+        // Syntactic sugar for: (set foo (+ foo inc))
+
+        if (exp[0] === '+=') {
+            const setExp = this._transformer.transformIncValToSet(exp);
+            return this.eval(setExp, env);
+        }
+
+        // --------------------------------------------
+        // Decrement: (-= foo dec)
+        //
+        // Syntactic sugar for: (set foo (- foo dec))
+
+        if (exp[0] === '-=') {
+            const setExp = this._transformer.transformDecValToSet(exp);
+            return this.eval(setExp, env);
+        }
+
+        // --------------------------------------------
         // Block: sequence of expressions
 
         if (exp[0] === 'begin') {
@@ -27,7 +67,7 @@ class Eva {
             return this._evalBlock(exp, blockEnv);
         }
 
-        //-----------------------------------------------
+        // --------------------------------------------
         // Variable declaration: (var foo 10)
 
         if (exp[0] === 'var') {
@@ -35,7 +75,7 @@ class Eva {
             return env.define(name, this.eval(value, env));
         }
 
-        //-----------------------------------------------
+        // --------------------------------------------
         // Variable update: (set foo 10)
 
         if (exp[0] === 'set') {
@@ -43,7 +83,7 @@ class Eva {
             return env.assign(name, this.eval(value, env));
         }
 
-        //-----------------------------------------------
+        // --------------------------------------------
         // if-expression:
 
         if (exp[0] === 'if') {
@@ -54,7 +94,15 @@ class Eva {
             return this.eval(alternate, env);
         }
 
-        //-----------------------------------------------
+        // --------------------------------------------
+        // switch-expression:
+
+        if (exp[0] === 'switch') {
+            const ifExp = this._transformer.transformSwitchToIf(exp);
+            return this.eval(ifExp, env);
+        }
+
+        // --------------------------------------------
         // while-expression:
 
         if (exp[0] === 'while') {
@@ -66,18 +114,26 @@ class Eva {
             return result;
         }
 
-        //-----------------------------------------------
+        // --------------------------------------------
+        // for-expression:
+
+        if (exp[0] === 'for') {
+            const whileExp = this._transformer.transformForToWhile(exp);
+            return this.eval(whileExp, env);
+        }
+
+        // --------------------------------------------
         // Function declaration: (def square (x) (* x x))
         //
         // Syntactic sugar for: (var square (lambda (x) (* x x)))
 
         if (exp[0] === 'def') {
             // JIT-transpile to a variable declaration
-            const varExp = this.transformer.transformDefToVarLambda(exp);
+            const varExp = this._transformer.transformDefToVarLambda(exp);
             return this.eval(varExp, env);
         }
 
-        //-----------------------------------------------
+        // --------------------------------------------
         // Lambda function: (lambda (x) (* x x))
 
         if (exp[0] === 'lambda') {
@@ -90,7 +146,7 @@ class Eva {
             };
         }
 
-        //-----------------------------------------------
+        // --------------------------------------------
         // Function calls:
         //
         // (print "Hello World")
@@ -119,7 +175,7 @@ class Eva {
             return this._evalBody(fn.body, activationEnv);
         }
 
-        //-----------------------------------------------
+        // --------------------------------------------
         // Variable access: foo
 
         if (this._isVariableName(exp)) {
