@@ -175,6 +175,14 @@ class Eva {
         }
 
         // --------------------------------------------
+        // Super expressions: (super <ClassName>)
+
+        if (exp[0] === 'super') {
+            const [_tag, className] = exp;
+            return this.eval(className, env).parent;
+        }
+
+        // --------------------------------------------
         // Class instantiation: (new <Class> <Arguments>)
 
         if (exp[0] === 'new') {
