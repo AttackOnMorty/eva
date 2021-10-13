@@ -11,8 +11,6 @@ module.exports = (eva) => {
             [
                 'while',
                 ['<', 'counter', 10],
-                // counter++
-                // TODO: implement ['++', <Exp>]
                 ['set', 'counter', ['+', 'counter', 1]],
             ],
 

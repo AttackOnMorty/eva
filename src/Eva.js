@@ -120,7 +120,7 @@ class Eva {
         }
 
         // --------------------------------------------
-        // if-expression:
+        // if-expression: (if <condition> <consequent> <alternate>)
 
         if (exp[0] === 'if') {
             const [_tag, condition, consequent, alternate] = exp;
@@ -139,7 +139,7 @@ class Eva {
         }
 
         // --------------------------------------------
-        // while-expression:
+        // while-expression: (while <condition> <body>)
 
         if (exp[0] === 'while') {
             const [_tag, condition, body] = exp;
@@ -277,6 +277,7 @@ class Eva {
             }
 
             // 2. User-defined function:
+
             return this._callUserDefinedFunction(fn, args);
         }
 
