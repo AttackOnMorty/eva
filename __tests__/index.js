@@ -17,6 +17,7 @@ const tests = [
     require('./inc-val-test'),
     require('./dec-val-test'),
     require('./class-test'),
+    require('./module-test'),
 ];
 
 const eva = new Eva();

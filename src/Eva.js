@@ -209,6 +209,18 @@ class Eva {
         }
 
         // --------------------------------------------
+        // Module declaration: (module <name> <body>)
+
+        if (exp[0] === 'module') {
+            const [_tag, name, body] = exp;
+            const moduleEnv = new Environment({}, env);
+
+            this._evalBody(body, moduleEnv);
+
+            return env.define(name, moduleEnv);
+        }
+
+        // --------------------------------------------
         // Function calls:
         //
         // (print "Hello World")
@@ -300,7 +312,7 @@ const GlobalEnvironment = new Environment({
 
     '+': (op1, op2) => op1 + op2,
 
-    '-': (op1, op2) => {
+    '-': (op1, op2 = null) => {
         if (op2 === null) return -op1;
         return op1 - op2;
     },
