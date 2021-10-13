@@ -1,5 +1,8 @@
+const fs = require('fs');
+
 const Environment = require('./Environment');
 const Transformer = require('./Transformer');
+const Parser = require('./parser');
 
 class Eva {
     constructor(global = GlobalEnvironment) {
@@ -218,6 +221,21 @@ class Eva {
             this._evalBody(body, moduleEnv);
 
             return env.define(name, moduleEnv);
+        }
+
+        // --------------------------------------------
+        // Module import: (import <name>)
+        // (import (export1, export2, ...) <name>)
+
+        if (exp[0] === 'import') {
+            const [_tag, name] = exp;
+            const moduleSrc = fs.readFileSync(
+                `${__dirname}/modules/${name}.eva`
+            );
+            const body = Parser.parse(`(begin ${moduleSrc})`);
+            const moduleExp = ['module', name, body];
+
+            return this.eval(moduleExp, env);
         }
 
         // --------------------------------------------

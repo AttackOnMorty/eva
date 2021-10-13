@@ -4,21 +4,7 @@ module.exports = (eva) => {
     test(
         eva,
         `
-          (module Math
-            (begin
-
-              (def abs (value)
-                (if (< value 0)
-                    (- value)
-                    value))
-
-              (def square (x)
-                (* x x))
-
-              (var MAX_VALUE 1000)
-
-            )
-          )
+          (import Math)
 
           ((prop Math abs) (- 10))
         `,
@@ -28,21 +14,7 @@ module.exports = (eva) => {
     test(
         eva,
         `
-          (module Math
-            (begin
-
-              (def abs (value)
-                (if (< value 0)
-                    (- value)
-                    value))
-
-              (def square (x)
-                (* x x))
-
-              (var MAX_VALUE 1000)
-
-            )
-          )
+          (import Math)
 
           (var abs (prop Math abs))
 
@@ -54,21 +26,7 @@ module.exports = (eva) => {
     test(
         eva,
         `
-          (module Math
-            (begin
-
-              (def abs (value)
-                (if (< value 0)
-                    (- value)
-                    value))
-
-              (def square (x)
-                (* x x))
-
-              (var MAX_VALUE 1000)
-
-            )
-          )
+          (import Math)
 
           (prop Math MAX_VALUE)
         `,
