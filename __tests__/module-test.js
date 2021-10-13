@@ -69,7 +69,7 @@ module.exports = (eva) => {
 
             )
           )
-          
+
           (prop Math MAX_VALUE)
         `,
         1000
