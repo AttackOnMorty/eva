@@ -1,3 +1,21 @@
+/*
+- TODO: Other data structures:
+
+  (var base (object (value 100)))
+
+  (object
+    (x 10)
+    (y 20)
+    (__proto__ base))
+
+  (var values (list 42 "Hello" foo))
+
+  values[0]
+
+  (idx values 0) // 42
+  (idx values 1) // "Hello"
+*/
+
 const fs = require('fs');
 
 const Environment = require('./Environment');
@@ -14,8 +32,8 @@ class Eva {
      * Evaluates global code wrapping into a block.
      */
 
-    evalGlobal(expressions) {
-        return this._evalBlock(['block', expressions], this.global);
+    evalGlobal(exp) {
+        return this._evalBlock(exp, this.global);
     }
 
     eval(exp, env = this.global) {
@@ -226,15 +244,18 @@ class Eva {
         // --------------------------------------------
         // Module import: (import <name>)
         // (import (export1, export2, ...) <name>)
+        // TODO: (import (abs, square) Math) / (exports (abs, square)) / (export (def square (x) (* x x)))
 
         if (exp[0] === 'import') {
             const [_tag, name] = exp;
+
             const moduleSrc = fs.readFileSync(
                 `${__dirname}/modules/${name}.eva`
             );
             const body = Parser.parse(`(begin ${moduleSrc})`);
             const moduleExp = ['module', name, body];
 
+            // NOTE: If we pass this.global as 2th argument, module will be stored in the global.
             return this.eval(moduleExp, env);
         }
 
